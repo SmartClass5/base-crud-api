@@ -21,6 +21,9 @@ mongoose.connect(`${mongourl}`, {
 
 app.use('/custom-api', Routers);
 
+app.get('/test', (req,res)=>{
+    return res.json({msg:"test"})
+});
 app.use((req, res, next) => {
     res.status(404).send('Not found')
 })
