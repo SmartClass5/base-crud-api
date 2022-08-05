@@ -11,7 +11,7 @@ replicas:
   revisionHistoryLimit: 0
 
 image:
-  version: main-d162c23
+  version: main-2fc3f0d
   repository: 142373294051.dkr.ecr.us-east-1.amazonaws.com/base-crud
   pullPolicy: IfNotPresent
 
