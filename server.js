@@ -6,7 +6,7 @@ const mongoose = require('mongoose');
 const app = express();
 // const tweetRoute = require('./router/tweets.js)'
 const Routers = require('./routes/routes.js');
-const { mongourl } = require("../auth-api/config/config.js");
+const { mongourl } = require("./config/config");
 
 
 app.use(express.json());
