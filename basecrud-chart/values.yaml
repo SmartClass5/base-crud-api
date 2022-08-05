@@ -11,7 +11,7 @@ replicas:
   revisionHistoryLimit: 0
 
 image:
-  version: main-8d2df20
+  version: main-c56c500
   repository: 142373294051.dkr.ecr.us-east-1.amazonaws.com/base-crud
   pullPolicy: IfNotPresent
 
