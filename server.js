@@ -21,14 +21,14 @@ mongoose.connect(`${mongourl}`, {
 
 app.use('/custom-api', Routers);
 
-app.get('/test', (req,res)=>{
-    return res.json({msg:"test"})
+app.get('/test', (req, res) => {
+    return res.json({ msg: "test" })
 });
 app.use((req, res, next) => {
     res.status(404).send('Not found')
 })
 
-app.use((error,req, res, next) => {
+app.use((error, req, res, next) => {
     console.log(error);
     res.status(500).send('internal server Error')
 })

@@ -1,6 +1,6 @@
 const { Lecture } = require('../models/lecture');
 const _ = require('lodash')
-let LectureController ={}
+let LectureController = {}
 // 강좌 관련
 
 // const LectureSchemma = new mongoose.Schema({
@@ -30,21 +30,30 @@ let LectureController ={}
  * @param {*} res.body 
  * @param {*} next 
  */
- LectureController.getLecture= async (req,res,next)=>{
+LectureController.getLecture = async (req, res, next) => {
     let result = []
-    const { id } = _.get(req,'params')
-    const {limit =0, sort='title', page=1} = _.get(req,'query')
+    const { id = "", limit = 0, sort = 'title', page = 1, category = '' } = _.get(req, 'query')
+    console.log(_.get(req, 'query'))
+    console.log(_.get(req, 'params'))
     try {
-        if(_.isEmpty(id)){
-         result = await Lecture.find().sort({sort:1}).limit(limit).skip(limit*(page-1))
-        }else{
-            result = await Lecture.find({_id:id})
+        if (_.isEmpty(_.get(req, 'query')) && _.isEmpty(_.get(req, 'params'))) {
+            console.log(1)
+            result = await Lecture.find({}).sort({ sort: 1 }).limit(limit).skip(limit * (page - 1))
         }
-        res.status(200).json({data:result})
+        else if (!_.isEmpty(category)) {
+            console.log(2)
+            result = await Lecture.find({ category }).sort({ sort: 1 }).limit(limit).skip(limit * (page - 1))
+        }
+        else {
+            console.log(3, { _id: id })
+            result = await Lecture.find({ _id: id })
+
+        }
+        res.status(200).json({ data: result })
     } catch (error) {
-        res.status(400).json({path:"LectureController.getLecture Error",error})
+        res.status(400).json({ path: "LectureController.getLecture Error", error })
     }
-   
+
 }
 /**
  * 
@@ -55,17 +64,17 @@ let LectureController ={}
  * @param  { category, sub_category, title,sub_title,intro,thumbnail,difficulty,tag,for_recommend,paid,review,body,pay_div,teacher,curriculum_summary }  res.body 
  * @param {*} next 
  */
-LectureController.createLecture= async (req,res,next)=>{
-    const { category, sub_category, title,sub_title,intro,thumbnail,difficulty,tag,for_recommend,paid,review,body,pay_div,teacher,curriculum_summary } = req.body;
-    try{
+LectureController.createLecture = async (req, res, next) => {
+    const { category, sub_category, title, sub_title, intro, thumbnail, difficulty, tag, for_recommend, paid, review, body, pay_div, teacher, curriculum_summary } = req.body;
+    try {
         const result = await Lecture.updateOne(
-            { category, sub_category, title,sub_title,intro,thumbnail,difficulty,tag,for_recommend,paid,review,body,pay_div,teacher,curriculum_summary } ,
-            { category, sub_category, title,sub_title,intro,thumbnail,difficulty,tag,for_recommend,paid,review,body,pay_div,teacher,curriculum_summary } ,
-            {upsert:true})
-    
-        res.status(200).json({data:result})
-    }catch(error){
-        res.status(400).json({path:"LectureController.createLecture Error",error})
+            { category, sub_category, title, sub_title, intro, thumbnail, difficulty, tag, for_recommend, paid, review, body, pay_div, teacher, curriculum_summary },
+            { category, sub_category, title, sub_title, intro, thumbnail, difficulty, tag, for_recommend, paid, review, body, pay_div, teacher, curriculum_summary },
+            { upsert: true })
+
+        res.status(200).json({ data: result })
+    } catch (error) {
+        res.status(400).json({ path: "LectureController.createLecture Error", error })
     }
 }
 
@@ -78,25 +87,25 @@ LectureController.createLecture= async (req,res,next)=>{
  * @param { name, user, lecture_title,lecture } res.body 
  * @param {*} next 
  */
-LectureController.updateLecture= async (req,res,next)=>{
+LectureController.updateLecture = async (req, res, next) => {
     let result = []
-    const { id } = _.get(req,'params')
-    const  { category, sub_category, title,sub_title,intro,thumbnail,difficulty,tag,for_recommend,paid,review,body,pay_div,teacher,curriculum_summary } = req.body;
-    console.log({ title, sub_title , thumbnail })
-    let update ={}
+    const { id } = _.get(req, 'params')
+    const { category, sub_category, title, sub_title, intro, thumbnail, difficulty, tag, for_recommend, paid, review, body, pay_div, teacher, curriculum_summary } = req.body;
+    console.log({ title, sub_title, thumbnail })
+    let update = {}
 
-    if(_.isEmpty(id)){
-        throw new Error({message:"cat not find id"})
+    if (_.isEmpty(id)) {
+        throw new Error({ message: "cat not find id" })
     }
-    try{
+    try {
         const result = await Lecture.updateOne(
-            {_id:id},
-            { category, sub_category, title,sub_title,intro,thumbnail,difficulty,tag,for_recommend,paid,review,body,pay_div,teacher,curriculum_summary } ,
-            {upsert:true})
-    
-        res.status(200).json({data:result})
-    }catch(error){
-        res.status(400).json({path:"LectureController.updateLecture Error",error})
+            { _id: id },
+            { category, sub_category, title, sub_title, intro, thumbnail, difficulty, tag, for_recommend, paid, review, body, pay_div, teacher, curriculum_summary },
+            { upsert: true })
+
+        res.status(200).json({ data: result })
+    } catch (error) {
+        res.status(400).json({ path: "LectureController.updateLecture Error", error })
     }
 }
 /**
@@ -108,15 +117,15 @@ LectureController.updateLecture= async (req,res,next)=>{
  * @param {*} res.body 
  * @param {*} next 
  */
-LectureController.deleteLecture= async (req,res,next)=>{
+LectureController.deleteLecture = async (req, res, next) => {
     try {
-        const { id } = _.get(req,'params')
-        const result = await Lecture.findOneAndRemove({_id:id})
-        res.status(200).json({data:result})
+        const { id } = _.get(req, 'params')
+        const result = await Lecture.findOneAndRemove({ _id: id })
+        res.status(200).json({ data: result })
     } catch (error) {
-        res.status(400).json({path:"LectureController.deleteLecture Error",error})
+        res.status(400).json({ path: "LectureController.deleteLecture Error", error })
     }
-   
+
 }
 
 module.exports = LectureController;
